@@ -94,6 +94,7 @@ public:
 	const Item_Type& get_data() const;
 
 	string Decode(string morse);
+	string Encode(string character, map<char, string> themap);
 
 	/** Indicate that this is the empty tree. */
 	bool is_null() const;
@@ -354,11 +355,18 @@ void Binary_Tree<Item_Type>::insert(map<char, string>& item, vector<string> temp
 template<typename Item_Type>
 string Binary_Tree<Item_Type>::Decode(string morse)
 {
-	root = *parentTree.getRoot();
+	BTNode<Item_Type>* toproot = getRoot();
+	root = toproot;
+
 	int i = 0;
 	string result = " "; 
 	while (i < morse.size())
 	{
+		if (morse[i] == ' ') {
+			result += root->data;
+			root = toproot;
+		}
+
 		if (morse[i] == '.')
 		{
 			root = root->left;
@@ -375,16 +383,29 @@ string Binary_Tree<Item_Type>::Decode(string morse)
 
 		}
 		i++;
-		result += root->data;
 
 	}
+	result += root->data;
+
+
 	return result; 
 }
 
+template<typename Item_Type>
+string Binary_Tree<Item_Type>::Encode(string character, map<char, string> themap) {
+	string result = " ";
+	for (map<char, string>::iterator it = themap.begin(); it != themap.end(); it++)
+	{
+		for (int i = 0; i < character.size(); i++) {
+			if (it->first == character[i]) {
+				result += it->second;
+				result += " ";
+			}
+		}
+	}
+	return result;
 
-
-
-
+}
 
 
 
