@@ -70,7 +70,7 @@ public:
 		= Binary_Tree()) :
 		root(new BTNode<Item_Type>(the_data, left_child.root,
 			right_child.root)) {}
-	
+
 	/** Virtual destructor to avoid warnings */
 	virtual ~Binary_Tree() {} // Do nothing.
 
@@ -84,14 +84,16 @@ public:
 	bool isBinarySearch();
 
 	void isBinarySearch(BTNode<Item_Type>* local_root, bool& result);
-	
+
 	//template<typename Item_Type>
-	void insert(std::map<char, std::string>& item);
+	void insert(std::map<char, std::string>& item, vector<string> temp);
 
 	/** Return the data field of the root.
 	@throws std::invalid_argument if empty tree
 	*/
 	const Item_Type& get_data() const;
+
+	string Decode(string morse);
 
 	/** Indicate that this is the empty tree. */
 	bool is_null() const;
@@ -102,9 +104,9 @@ public:
 	/** Return a string representation of this tree. */
 	virtual std::string to_string() const;
 
-	Binary_Tree<Item_Type> read_tree();
+	Binary_Tree<Item_Type> read_tree(vector<string> temp);
 
-	Binary_Tree<Item_Type> read_binary_tree(int& i, string text);
+	Binary_Tree<Item_Type> read_binary_tree(vector<string>& text, int& i);
 
 	/** Return a string representation of the root */
 	std::string root_to_string() const {
@@ -154,6 +156,7 @@ protected:
 
 	// Data Field
 	BTNode<Item_Type>* root;
+	Binary_Tree<Item_Type>* parentTree;
 
 private:
 
@@ -268,7 +271,7 @@ std::string Binary_Tree<Item_Type>::to_string() const {
 	if (is_null())
 		cout << "NULL\n";
 	else {
-		cout <<  root->data << '\n';
+		cout << root->data << '\n';
 		cout << get_left_subtree().to_string();
 		cout << get_right_subtree().to_string();
 	}
@@ -280,17 +283,17 @@ while (st.has_more_tokens()) {
 string term = st.next_token();*/
 
 template<typename Item_Type>
-Binary_Tree<Item_Type> Binary_Tree<Item_Type>::read_tree() {
+Binary_Tree<Item_Type> Binary_Tree<Item_Type>::read_tree(vector<string> temp) {
 	int i = 0;
 	string text = "XX";
-	Binary_Tree<Item_Type> newTree = read_binary_tree(i, text);
+	Binary_Tree<Item_Type> newTree = read_binary_tree(temp, i);
 	setRoot(newTree.getRoot());
-	
+
 	return newTree;
 }
 
 template<typename Item_Type>
-void Binary_Tree<Item_Type>::insert(map<char, string>& item)
+void Binary_Tree<Item_Type>::insert(map<char, string>& item, vector<string> temp)
 {
 	//string txt = "T";
 	//Binary_Tree<Item_Type> left = Binary_Tree<Item_Type>("East",string("West"),NULL);
@@ -307,9 +310,9 @@ void Binary_Tree<Item_Type>::insert(map<char, string>& item)
 	//	<< parentTree.get_left_subtree() << parentTree.get_right_subtree() << endl;
 
 	//To make an full empty tree
-	Binary_Tree<Item_Type> parentTree = read_tree();
-	cout << parentTree.to_string();
-	
+	Binary_Tree<Item_Type> parentTree = read_tree(temp);
+	//cout << parentTree.to_string();
+
 	for (map<char, string>::iterator it = item.begin(); it != item.end(); it++)
 	{
 		int i = 0;
@@ -320,14 +323,13 @@ void Binary_Tree<Item_Type>::insert(map<char, string>& item)
 			if (it->second[i] == '.')
 			{
 				root = root->left;
-				root->data = 'W';
-				parentTree.to_string();
+				//parentTree.to_string();
 
 			}
 
 			else
 			{
-				if (it->second[i] == '-')
+				if (it->second[i] == '_')
 				{
 					root = root->right;
 				}
@@ -339,31 +341,68 @@ void Binary_Tree<Item_Type>::insert(map<char, string>& item)
 
 		root->data = it->first;
 		cout << root->data;
+
+		//parentTree.to_string();
+		//cout << "Original root is:\n";
+		//cout << parentTree.getRoot() ->data;
+		root = parentTree.getRoot(); 
+		//cout << root;
 	}
+	cout << endl;
+	parentTree.to_string(); //outputs the binary tree
 }
+template<typename Item_Type>
+string Binary_Tree<Item_Type>::Decode(string morse)
+{
+	root = *parentTree.getRoot();
+	int i = 0;
+	string result = " "; 
+	while (i < morse.size())
+	{
+		if (morse[i] == '.')
+		{
+			root = root->left;
+			//parentTree.to_string();
+
+		}
+
+		else
+		{
+			if (morse[i] == '_')
+			{
+				root = root->right;
+			}
+
+		}
+		i++;
+		result += root->data;
+
+	}
+	return result; 
+}
+
+
+
+
+
+
+
 
 template<typename Item_Type>
 Binary_Tree<Item_Type> Binary_Tree<Item_Type>::
-read_binary_tree(int& i, string text) {
-
-	if (i == 5 || i == 6 || i == 8 || i == 9 || i == 12 || i == 13 || i == 15 || i == 16 
-		|| i ==20 || i == 21 || i == 23 || i == 24 || i == 27 || i == 28 || i == 30 || i == 31 
-		|| i == 36 || i == 37 || i == 39 || i == 40 || i == 43 || i == 44 || i == 46 || i == 47
-		|| i == 51 || i== 52 || i == 54 || i == 55 || i== 58 || i == 59)
+read_binary_tree(vector<string>& text, int& i) {
+	if (i > text.size()-1 || text[i] == "NULL")
 	{
-		text = "NULL";
-	}
-
-	if (i>60 || text == "NULL") {
 		return Binary_Tree<Item_Type>();
 	}
 
 	else {
+		string txt = text[i];
 		//i = i + 1;
-		Binary_Tree<Item_Type> left = read_binary_tree(++i, text);
+		Binary_Tree<Item_Type> left = read_binary_tree(text, ++i);
 		//i = i + 1;
-		Binary_Tree<Item_Type> right = read_binary_tree(++i, text);
-		return Binary_Tree<Item_Type>(text, left, right);
+		Binary_Tree<Item_Type> right = read_binary_tree(text, ++i);
+		return Binary_Tree<Item_Type>(txt, left, right);
 	}
 }
 
@@ -386,4 +425,3 @@ read_binary_tree(int& i, string text) {
 //}
 
 #endif
-

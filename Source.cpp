@@ -6,10 +6,12 @@
 #include <stdio.h>
 #include <cctype>
 #include <map>
+#include <vector>
 using namespace std;
 
 int main()
 {
+	vector<string> nodestuff{ "XX", "XX", "XX", "XX", "XX", "NULL", "NULL", "XX", "NULL", "NULL", "XX", "XX", "NULL", "NULL", "XX", "NULL", "NULL", "XX", "XX", "XX","NULL", "NULL", "XX", "NULL", "NULL", "XX", "XX", "NULL", "NULL", "XX", "NULL", "NULL", "XX","XX", "XX", "XX", "NULL", "NULL", "XX", "NULL", "NULL", "XX", "XX", "NULL", "NULL", "XX", "NULL", "NULL", "XX", "XX", "XX", "NULL", "NULL", "XX", "NULL", "NULL", "XX", "XX", "NULL", "NULL", "XX", "NULL", "NULL" };
 	map<char, string> myTree;
 	string myString;
 
@@ -35,9 +37,9 @@ int main()
 		//cout << it->second.size() << endl;
 	}
 	
-	Tree.insert(myTree);
+	Tree.insert(myTree, nodestuff);
 	//Tree.read_tree(myTree);
-
+	cout << Tree.Decode(".");
 	
 	infile.close();
 	system("pause");
