@@ -30,13 +30,10 @@ int main()
 		myTree[key] = value;
 	}
 	
-	//cout << myTree['a'] << endl;
-
-	
 	Tree.insert(myTree, nodestuff);
 	//Tree.read_tree(myTree);
-	cout <<"Decoded equals: "<< Tree.Decode(".._. .._ _._. _._") << endl;
-	cout <<"Encoded equals: " << Tree.Encode("ad", myTree)<< endl;
+	cout <<"Decoded equals: "<< Tree.Decode(".... ._ ._.. ._.. . ._.. .._ .___ ._ ....") << endl;
+	cout <<"Encoded equals: " << Tree.Encode("do you know da wae?", myTree)<< endl;
 	
 	infile.close();
 	system("pause");
