@@ -31,11 +31,5 @@ struct BTNode
 	}
 }; // End BTNode
 
-   // Overloading the ostream insertion operator
-template<typename Char>
-std::ostream& operator<<(std::ostream& out,
-	const char& node) {
-	return out << node.to_string();
-}
 
 #endif

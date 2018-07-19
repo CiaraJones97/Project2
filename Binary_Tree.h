@@ -17,9 +17,10 @@ template<typename Item_Type>
 class Binary_Tree
 {
 public:
-
+	//Set the first parent root
 	void setRoot(BTNode<Item_Type>* newRoot);
 
+	//Get the first parent root
 	BTNode<Item_Type>* getRoot();
 
 	// Constructors and Functions
@@ -43,18 +44,18 @@ public:
 	/** Virtual destructor to avoid warnings */
 	virtual ~Binary_Tree() {} // Do nothing.
 
-
-	//template<typename Item_Type>
+	//Function to take the map and vector fill the Binary Tree
 	void insert(std::map<char, std::string>& item, vector<string> temp);
 
+	//Function to decode a message
 	string Decode(string morse);
+
+	//Function to encode a message
 	string Encode(string character, map<char, string> themap);
 
+	//Function to make the inital Binary Tree
 	Binary_Tree<Item_Type> read_tree(vector<string> temp);
-
 	Binary_Tree<Item_Type> read_binary_tree(vector<string>& text, int& i);
-
-	/** Return a string representation of the root */
 
 protected:
 
@@ -66,6 +67,7 @@ protected:
 	BTNode<Item_Type>* root;
 
 };
+
 template<typename Item_Type>
 void Binary_Tree<Item_Type>::setRoot(BTNode<Item_Type>* new_root) {
 
@@ -79,54 +81,50 @@ BTNode<Item_Type>* Binary_Tree<Item_Type>::getRoot() {
 	return root;
 }
 
-
-// Implementation of member functions
-
 template<typename Item_Type>
 Binary_Tree<Item_Type> Binary_Tree<Item_Type>::read_tree(vector<string> temp) {
+	//Make a complete and full Binary Tree with every node as 'XX' or NULL
 	int i = 0;
 	string text = "XX";
 	Binary_Tree<Item_Type> newTree = read_binary_tree(temp, i);
 	setRoot(newTree.getRoot());
 
+	//Output the tree
 	return newTree;
 }
 
 template<typename Item_Type>
 void Binary_Tree<Item_Type>::insert(map<char, string>& item, vector<string> temp)
 {
-
 	//To make an full empty tree
 	Binary_Tree<Item_Type> parentTree = read_tree(temp);
-
 
 	for (map<char, string>::iterator it = item.begin(); it != item.end(); it++)
 	{
 		int i = 0;
 		int x = it->second.size();
-		//root = parent_root->left;
+
 		while (i < x)
 		{
+			//If the character is a dot
 			if (it->second[i] == '.')
 			{
 				root = root->left;
-				//parentTree.to_string();
-
 			}
 
-			else
+			//If the character is a dash
+			else if (it->second[i] == '_')
 			{
-				if (it->second[i] == '_')
-				{
-					root = root->right;
-				}
-
+				root = root->right;
 			}
 			i++;
 
 		}
 
+		//Replace the temporary character with the correct character
 		root->data = it->first;
+
+		//Get the inital parent root
 		root = parentTree.getRoot();
 	}
 }
@@ -141,42 +139,42 @@ string Binary_Tree<Item_Type>::Decode(string morse)
 	string result = " "; 
 	while (i < morse.size())
 	{
+		//If the character is a space
 		if (morse[i] == ' ') {
 			result += root->data;
 			root = toproot;
 		}
 
+		//If the character is a dot
 		if (morse[i] == '.')
 		{
 			root = root->left;
-			//parentTree.to_string();
-
 		}
 
-		else
+		//If the character is a dash
+		else if (morse[i] == '_')
 		{
-			if (morse[i] == '_')
-			{
-				root = root->right;
-			}
-
+			root = root->right;
 		}
 		i++;
 
 	}
 	result += root->data;
 
-
+	//Output the result
 	return result; 
 }
 
 template<typename Item_Type>
 string Binary_Tree<Item_Type>::Encode(string character, map<char, string> themap) {
 	string result = " ";
+	//Loop though every character 
 	for (int i = 0; i < character.size(); i++) 
 	{
+			//Loop through every character in the map
 			for (map<char, string>::iterator it = themap.begin(); it != themap.end(); it++)
 			{
+				//If the target character is found
 				if (character[i] == it->first) 
 				{
 				result += it->second;
@@ -184,6 +182,8 @@ string Binary_Tree<Item_Type>::Encode(string character, map<char, string> themap
 				}
 			}
 	}
+
+	//Output the result
 	return result;
 
 }
@@ -191,6 +191,9 @@ string Binary_Tree<Item_Type>::Encode(string character, map<char, string> themap
 template<typename Item_Type>
 Binary_Tree<Item_Type> Binary_Tree<Item_Type>::
 read_binary_tree(vector<string>& text, int& i) {
+
+	/*If there isnt any more information to take from the vector or if the
+	current value is NULL*/
 	if (i > text.size()-1 || text[i] == "NULL")
 	{
 		return Binary_Tree<Item_Type>();
